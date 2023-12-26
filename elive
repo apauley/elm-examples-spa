@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+elm-live --pushstate --start-page=index.html -- --output=main.min.js src/Main.elm
