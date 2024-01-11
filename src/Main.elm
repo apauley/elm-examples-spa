@@ -2,8 +2,8 @@ module Main exposing (main)
 
 import Browser exposing (Document)
 import Browser.Navigation as Nav
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Element exposing (..)
+import Element.Region as Region
 import Page.Counter
 import Page.Home
 import Page.ImagePreview
@@ -205,15 +205,19 @@ view model =
     in
     { title = pageTitel
     , body =
-        [ div []
-            [ navLinkView
-            , pageContent
-            ]
+        [ Element.layout []
+            (column
+                []
+                [ el [ Region.navigation ] navLinkView
+                , el [ Region.mainContent, padding 100 ] pageContent
+                , el [ Region.footer ] (text "Footer text")
+                ]
+            )
         ]
     }
 
 
-pageView : Model -> ( String, Html Msg )
+pageView : Model -> ( String, Element Msg )
 pageView model =
     case model.route of
         Nothing ->
@@ -227,44 +231,56 @@ pageView model =
                 ( title, content ) =
                     Page.Counter.view model.pagesState.counter
             in
-            ( title, Html.map GotCounterMsg content )
+            ( title, Element.map GotCounterMsg content )
 
         Just Route.ImagePreview ->
             let
                 ( title, content ) =
                     Page.ImagePreview.view model.pagesState.imagePreview
             in
-            ( title, Html.map GotImagePreviewMsg content )
+            ( title, Element.map GotImagePreviewMsg content )
 
         Just Route.Upload ->
             let
                 ( title, content ) =
                     Page.Upload.view model.pagesState.upload
             in
-            ( title, Html.map GotUploadMsg content )
+            ( title, Element.map GotUploadMsg content )
 
         Just Route.Quotes ->
             let
                 ( title, content ) =
                     Page.Quotes.view model.pagesState.quotes
             in
-            ( title, Html.map GotQuotesMsg content )
+            ( title, Element.map GotQuotesMsg content )
 
 
-navLinkView : Html msg
+navLinkView : Element msg
 navLinkView =
-    div []
-        [ span []
-            [ div [] [ navLink "/" "Home" ]
-            , div [] [ navLink "/counter" "Counter" ]
-            , div [] [ navLink "/preview" "Image Preview" ]
-            , div [] [ navLink "/upload" "File Upload" ]
-            , div [] [ navLink "/quotes" "Quotes" ]
-            ]
-        , hr [] []
+    row [ spacing 100 ]
+        [ row [ alignLeft, spacing 20 ] navLinks
+        , el [ padding 100 ] Element.none
+        , row [ alignRight, spacing 20 ] userLinks
         ]
 
 
-navLink : String -> String -> Html msg
+navLinks : List (Element msg)
+navLinks =
+    [ navLink "/" "Home"
+    , navLink "/counter" "Counter"
+    , navLink "/preview" "Image Preview"
+    , navLink "/upload" "File Upload"
+    , navLink "/quotes" "Quotes"
+    ]
+
+
+userLinks : List (Element msg)
+userLinks =
+    [ navLink "/login" "Login"
+    , navLink "/signup" "Sign up"
+    ]
+
+
+navLink : String -> String -> Element msg
 navLink path txt =
-    a [ href path ] [ text txt ]
+    link [] { url = path, label = text txt }

@@ -1,11 +1,10 @@
 module Page.Home exposing (view)
 
-import Html exposing (..)
+import Element exposing (..)
 
 
-view : ( String, Html msg )
+view : ( String, Element msg )
 view =
     ( "Home sweet home"
-    , div []
-        [ text "This is the home page. Click a link." ]
+    , text "This is the home page. Click a link."
     )

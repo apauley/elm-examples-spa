@@ -1,7 +1,10 @@
 module Page.Counter exposing (Model, Msg, init, update, view)
 
-import Html exposing (..)
-import Html.Events exposing (..)
+import Element exposing (..)
+import Element.Input as Input
+import Element.Region as Region
+import Html
+import UI
 
 
 type alias Model =
@@ -37,18 +40,16 @@ title model =
     String.join " " [ "Count:", String.fromInt model ]
 
 
-view : Model -> ( String, Html Msg )
+view : Model -> ( String, Element Msg )
 view model =
     ( title model
-    , div []
-        [ h1 [] [ text "Counter" ]
-        , br [] []
-        , div []
-            [ button [ onClick Decrement ] [ text "-" ]
+    , column [ spacing 10 ]
+        [ el [ Region.heading 1 ] <| Element.html <| Html.h1 [] [ Html.text "Counter" ]
+        , row [ spacing 10 ]
+            [ UI.button Decrement "-"
             , text (String.fromInt model)
-            , button [ onClick Increment ] [ text "+" ]
+            , UI.button Increment "+"
             ]
-        , button [ onClick Reset ] [ text "Reset Counter" ]
-        , hr [] []
+        , UI.button Reset "Reset"
         ]
     )

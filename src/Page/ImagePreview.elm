@@ -1,5 +1,6 @@
 module Page.ImagePreview exposing (Model, Msg, init, update, view)
 
+import Element exposing (Element)
 import File exposing (File)
 import File.Select as Select
 import Html exposing (..)
@@ -56,9 +57,9 @@ update msg model =
             ( { model | previews = previews }, Cmd.none )
 
 
-view : Model -> ( String, Html Msg )
+view : Model -> ( String, Element Msg )
 view model =
-    ( "Image Preview", div [] [ dragView model ] )
+    ( "Image Preview", dragView model |> Element.html )
 
 
 dragView : Model -> Html Msg

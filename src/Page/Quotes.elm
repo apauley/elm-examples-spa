@@ -6,11 +6,15 @@ module Page.Quotes exposing (Model(..), Msg, init, update, view)
 --   https://guide.elm-lang.org/effects/json.html
 --
 
-import Html exposing (..)
-import Html.Attributes exposing (style)
-import Html.Events exposing (..)
+import Element exposing (..)
+import Element.Background as Background
+import Element.Border as Border
+import Element.Input as Input
+import Element.Region as Region
+import Html exposing (Html)
 import Http
 import Json.Decode exposing (Decoder, field, int, map4, string)
+import UI
 
 
 
@@ -64,38 +68,55 @@ update msg _ =
 -- VIEW
 
 
-view : Model -> ( String, Html Msg )
+view : Model -> ( String, Element Msg )
 view model =
     ( "Random Quotes"
-    , div []
-        [ h2 [] [ text "Random Quotes" ]
+    , column []
+        [ el [ Region.heading 1 ] <| Element.html <| Html.h1 [] [ Html.text "Random Quotes" ]
         , viewQuote model
         ]
     )
 
 
-viewQuote : Model -> Html Msg
+viewQuote : Model -> Element Msg
 viewQuote model =
     case model of
         Failure ->
-            div []
+            column []
                 [ text "I could not load a random quote for some reason. "
-                , button [ onClick MorePlease ] [ text "Try Again!" ]
+                , Input.button
+                    []
+                    { onPress = Just MorePlease
+                    , label = text "Try Again!"
+                    }
                 ]
 
         Loading ->
             text "Loading..."
 
         Success quote ->
-            div []
-                [ button [ onClick MorePlease, style "display" "block" ] [ text "More Please!" ]
-                , blockquote [] [ text quote.quote ]
-                , p [ style "text-align" "right" ]
-                    [ text "— "
-                    , cite [] [ text quote.source ]
-                    , text (" by " ++ quote.author ++ " (" ++ String.fromInt quote.year ++ ")")
-                    ]
+            renderQuote quote
+
+
+renderQuote : Quote -> Element Msg
+renderQuote quote =
+    column []
+        [ el [ padding 20 ] <| UI.button MorePlease "More Please!"
+        , textColumn [ spacing 10, padding 10, Border.solid, Border.rounded 20, Border.width 2 ]
+            [ paragraph []
+                [ -- , blockquote [] [ text quote.quote ]
+                  text quote.quote
                 ]
+            , el [ alignLeft ] none
+            , paragraph [ alignRight ]
+                [ text "— "
+
+                -- , cite [] [ text quote.source ]
+                , el [] (text quote.source)
+                , text (" by " ++ quote.author ++ " (" ++ String.fromInt quote.year ++ ")")
+                ]
+            ]
+        ]
 
 
 

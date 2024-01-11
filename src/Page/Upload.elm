@@ -2,6 +2,7 @@ module Page.Upload exposing (Model, Msg, init, update, view)
 
 -- File upload with a drag and drop zone.
 
+import Element exposing (Element)
 import File exposing (File)
 import File.Select as Select
 import Html exposing (..)
@@ -67,10 +68,14 @@ update msg model =
 -- VIEW
 
 
-view : Model -> ( String, Html Msg )
+view : Model -> ( String, Element Msg )
 view model =
-    ( "File Upload"
-    , div
+    ( "File Upload", Element.html (htmlView model) )
+
+
+htmlView : Model -> Html Msg
+htmlView model =
+    div
         [ style "border"
             (if model.hover then
                 "6px dashed purple"
@@ -94,7 +99,6 @@ view model =
         ]
         [ button [ onClick Pick ] [ text "Upload Files" ]
         ]
-    )
 
 
 dropDecoder : D.Decoder Msg
