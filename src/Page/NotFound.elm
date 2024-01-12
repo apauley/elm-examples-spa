@@ -6,5 +6,5 @@ import Element exposing (..)
 view : ( String, Element msg )
 view =
     ( "Not Found"
-    , text "Page not found"
+    , el [ padding 200 ] <| text "Page not found"
     )

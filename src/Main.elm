@@ -4,6 +4,9 @@ import Browser exposing (Document)
 import Browser.Navigation as Nav
 import Element exposing (..)
 import Element.Region as Region
+import Framework
+import Framework.Grid as Grid
+import Html exposing (Html)
 import Page.Counter
 import Page.Home
 import Page.ImagePreview
@@ -210,13 +213,13 @@ view model =
     in
     { title = pageTitel
     , body =
-        [ Element.layout []
-            (UI.column
-                [ el [ Region.navigation ] navLinkView
-                , el [ Region.mainContent, padding 100 ] pageContent
-                , el [ Region.footer ] (text "Footer text")
-                ]
-            )
+        [ Framework.responsiveLayout [] <|
+            Element.el Framework.container <|
+                Element.column Grid.simple
+                    [ el [ Region.navigation ] navLinkView
+                    , el [ Region.mainContent ] pageContent
+                    , el [ Region.footer ] (text "Footer text")
+                    ]
         ]
     }
 
@@ -263,28 +266,23 @@ navLinkView : Element msg
 navLinkView =
     UI.row
         [ el [ alignLeft ] <| UI.row navLinks
-        , el [ padding 100 ] Element.none
+        , el [] Element.none
         , el [ alignRight ] <| UI.row userLinks
         ]
 
 
 navLinks : List (Element msg)
 navLinks =
-    [ navLink "/" "Home"
-    , navLink "/counter" "Counter"
-    , navLink "/preview" "Image Preview"
-    , navLink "/upload" "File Upload"
-    , navLink "/quotes" "Quotes"
+    [ UI.link "/" "Home"
+    , UI.link "/counter" "Counter"
+    , UI.link "/preview" "Image Preview"
+    , UI.link "/upload" "File Upload"
+    , UI.link "/quotes" "Quotes"
     ]
 
 
 userLinks : List (Element msg)
 userLinks =
-    [ navLink "/login" "Login"
-    , navLink "/signup" "Sign up"
+    [ UI.link "/login" "Login"
+    , UI.link "/signup" "Sign up"
     ]
-
-
-navLink : String -> String -> Element msg
-navLink path txt =
-    link [] { url = path, label = text txt }

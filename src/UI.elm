@@ -1,8 +1,7 @@
-module UI exposing (column, row, textButton)
+module UI exposing (column, link, row, textButton)
 
 import Element as E exposing (Element)
 import Widget exposing (ItemStyle, Modal)
-import Widget.Layout
 import Widget.Material as Material
 
 
@@ -12,6 +11,11 @@ textButton msg buttonText =
         { text = buttonText
         , onPress = Just msg
         }
+
+
+link : String -> String -> Element msg
+link path txt =
+    E.link [] { url = path, label = E.text txt }
 
 
 row : List (Element msg) -> Element msg
