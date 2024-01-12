@@ -43,13 +43,13 @@ title model =
 view : Model -> ( String, Element Msg )
 view model =
     ( title model
-    , column [ spacing 10 ]
+    , UI.column
         [ el [ Region.heading 1 ] <| Element.html <| Html.h1 [] [ Html.text "Counter" ]
-        , row [ spacing 10 ]
-            [ UI.button Decrement "-"
+        , UI.row
+            [ UI.textButton Decrement "-"
             , text (String.fromInt model)
-            , UI.button Increment "+"
+            , UI.textButton Increment "+"
             ]
-        , UI.button Reset "Reset"
+        , UI.textButton Reset "Reset"
         ]
     )

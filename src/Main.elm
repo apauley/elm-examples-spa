@@ -12,6 +12,7 @@ import Page.Quotes
 import Page.Upload
 import Platform.Cmd as Cmd
 import Route exposing (Route)
+import UI
 import Url
 
 
@@ -79,6 +80,7 @@ type Msg
     | GotImagePreviewMsg Page.ImagePreview.Msg
     | GotUploadMsg Page.Upload.Msg
     | GotQuotesMsg Page.Quotes.Msg
+    | GotMenuMsg Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -106,6 +108,9 @@ update msg model =
 
         GotQuotesMsg subMsg ->
             updateQuotes model subMsg
+
+        GotMenuMsg i ->
+            ( model, Cmd.none )
 
 
 updateQuotes : Model -> Page.Quotes.Msg -> ( Model, Cmd Msg )
@@ -206,8 +211,7 @@ view model =
     { title = pageTitel
     , body =
         [ Element.layout []
-            (column
-                []
+            (UI.column
                 [ el [ Region.navigation ] navLinkView
                 , el [ Region.mainContent, padding 100 ] pageContent
                 , el [ Region.footer ] (text "Footer text")
@@ -257,10 +261,10 @@ pageView model =
 
 navLinkView : Element msg
 navLinkView =
-    row [ spacing 100 ]
-        [ row [ alignLeft, spacing 20 ] navLinks
+    UI.row
+        [ el [ alignLeft ] <| UI.row navLinks
         , el [ padding 100 ] Element.none
-        , row [ alignRight, spacing 20 ] userLinks
+        , el [ alignRight ] <| UI.row userLinks
         ]
 
 

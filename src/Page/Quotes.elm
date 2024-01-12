@@ -7,7 +7,6 @@ module Page.Quotes exposing (Model(..), Msg, init, update, view)
 --
 
 import Element exposing (..)
-import Element.Background as Background
 import Element.Border as Border
 import Element.Input as Input
 import Element.Region as Region
@@ -71,7 +70,7 @@ update msg _ =
 view : Model -> ( String, Element Msg )
 view model =
     ( "Random Quotes"
-    , column []
+    , UI.column
         [ el [ Region.heading 1 ] <| Element.html <| Html.h1 [] [ Html.text "Random Quotes" ]
         , viewQuote model
         ]
@@ -82,7 +81,7 @@ viewQuote : Model -> Element Msg
 viewQuote model =
     case model of
         Failure ->
-            column []
+            UI.column
                 [ text "I could not load a random quote for some reason. "
                 , Input.button
                     []
@@ -100,8 +99,8 @@ viewQuote model =
 
 renderQuote : Quote -> Element Msg
 renderQuote quote =
-    column []
-        [ el [ padding 20 ] <| UI.button MorePlease "More Please!"
+    UI.column
+        [ el [ padding 20 ] <| UI.textButton MorePlease "More Please!"
         , textColumn [ spacing 10, padding 10, Border.solid, Border.rounded 20, Border.width 2 ]
             [ paragraph []
                 [ -- , blockquote [] [ text quote.quote ]
