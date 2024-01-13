@@ -52,7 +52,12 @@ init _ url navKey =
         ( pagesState, cmd ) =
             pagesInit
     in
-    ( { navKey = navKey, route = Route.fromUrl url, pagesState = pagesState }, cmd )
+    ( { navKey = navKey
+      , route = Route.fromUrl url
+      , pagesState = pagesState
+      }
+    , cmd
+    )
 
 
 pagesInit : ( PagesState, Cmd Msg )
@@ -92,7 +97,9 @@ update msg model =
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model, Nav.pushUrl model.navKey (Url.toString url) )
+                    ( model
+                    , Nav.pushUrl model.navKey (Url.toString url)
+                    )
 
                 Browser.External href ->
                     ( model, Nav.load href )
@@ -218,7 +225,7 @@ view model =
                 Element.column Grid.simple
                     [ el [ Region.navigation ] navLinkView
                     , el [ Region.mainContent ] pageContent
-                    , el [ Region.footer ] (text "Footer text")
+                    , el [ Region.footer ] <| text "Footer text"
                     ]
         ]
     }
@@ -265,24 +272,14 @@ pageView model =
 navLinkView : Element msg
 navLinkView =
     UI.row
-        [ el [ alignLeft ] <| UI.row navLinks
-        , el [] Element.none
-        , el [ alignRight ] <| UI.row userLinks
-        ]
+        [ el [ alignLeft ] <| UI.row navLinks ]
 
 
 navLinks : List (Element msg)
 navLinks =
-    [ UI.link "/" "Home"
-    , UI.link "/counter" "Counter"
-    , UI.link "/preview" "Image Preview"
-    , UI.link "/upload" "File Upload"
-    , UI.link "/quotes" "Quotes"
-    ]
-
-
-userLinks : List (Element msg)
-userLinks =
-    [ UI.link "/login" "Login"
-    , UI.link "/signup" "Sign up"
+    [ UI.appLink Route.Home "Home"
+    , UI.appLink Route.Counter "Counter"
+    , UI.appLink Route.ImagePreview "Image Preview"
+    , UI.appLink Route.Upload "File Upload"
+    , UI.appLink Route.Quotes "Quotes"
     ]

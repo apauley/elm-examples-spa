@@ -1,7 +1,8 @@
-module UI exposing (column, link, row, textButton)
+module UI exposing (appLink, column, row, textButton)
 
 import Element as E exposing (Element)
-import Widget exposing (ItemStyle, Modal)
+import Route exposing (Route)
+import Widget
 import Widget.Material as Material
 
 
@@ -11,6 +12,11 @@ textButton msg buttonText =
         { text = buttonText
         , onPress = Just msg
         }
+
+
+appLink : Route -> String -> Element msg
+appLink route txt =
+    link (Route.toPath route) txt
 
 
 link : String -> String -> Element msg
