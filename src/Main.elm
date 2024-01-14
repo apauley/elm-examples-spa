@@ -222,9 +222,11 @@ view model =
         [ Framework.responsiveLayout [] <|
             E.el Framework.container <|
                 E.column Grid.simple
-                    [ E.el [ Region.navigation ] navLinkView
-                    , E.el [ Region.mainContent ] pageContent
-                    , E.el [ Region.footer ] <| E.text "Footer text"
+                    [ E.el [ Region.navigation ] topBarNavLinks
+                    , E.row []
+                        [ E.el [ Region.navigation, E.alignTop ] sideBarNavLinks
+                        , E.el [ Region.mainContent ] pageContent
+                        ]
                     ]
         ]
     }
@@ -268,17 +270,17 @@ pageView model =
             ( title, E.map GotQuotesMsg content )
 
 
-navLinkView : Element msg
-navLinkView =
+topBarNavLinks : Element msg
+topBarNavLinks =
     E.row []
-        [ E.el [ E.alignLeft ] <| E.row [] navLinks ]
+        [ E.el [ E.alignLeft ] <| E.column [] [ UI.appLink Route.Home "Home" ] ]
 
 
-navLinks : List (Element msg)
-navLinks =
-    [ UI.appLink Route.Home "Home"
-    , UI.appLink Route.Counter "Counter"
-    , UI.appLink Route.ImagePreview "Image Preview"
-    , UI.appLink Route.Upload "File Upload"
-    , UI.appLink Route.Quotes "Quotes"
-    ]
+sideBarNavLinks : Element msg
+sideBarNavLinks =
+    E.column []
+        [ UI.appLink Route.Counter "Counter"
+        , UI.appLink Route.ImagePreview "Image Preview"
+        , UI.appLink Route.Upload "File Upload"
+        , UI.appLink Route.Quotes "Quotes"
+        ]
