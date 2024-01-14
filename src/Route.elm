@@ -19,24 +19,30 @@ subPath =
 
 toPath : Route -> String
 toPath route =
-    "/"
-        ++ subPath
-        ++ (case route of
+    let
+        pathSegments =
+            [ subPath
+            , case route of
                 Home ->
-                    "/"
+                    ""
 
                 Counter ->
-                    "/counter"
+                    "counter"
 
                 ImagePreview ->
-                    "/preview"
+                    "preview"
 
                 Upload ->
-                    "/upload"
+                    "upload"
 
                 Quotes ->
-                    "/quotes"
-           )
+                    "quotes"
+            ]
+
+        queryParameters =
+            []
+    in
+    Url.Builder.absolute pathSegments queryParameters
 
 
 parser : Parser (Route -> a) a
