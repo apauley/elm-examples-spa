@@ -6,7 +6,7 @@ module Page.Quotes exposing (Model(..), Msg, init, update, view)
 --   https://guide.elm-lang.org/effects/json.html
 --
 
-import Element exposing (..)
+import Element as E exposing (Element)
 import Element.Border as Border
 import Element.Input as Input
 import Element.Region as Region
@@ -70,8 +70,8 @@ update msg _ =
 view : Model -> ( String, Element Msg )
 view model =
     ( "Random Quotes"
-    , UI.column
-        [ el [ Region.heading 1 ] <| Element.html <| Html.h1 [] [ Html.text "Random Quotes" ]
+    , E.column []
+        [ E.el [ Region.heading 1 ] <| E.html <| Html.h1 [] [ Html.text "Random Quotes" ]
         , viewQuote model
         ]
     )
@@ -81,17 +81,13 @@ viewQuote : Model -> Element Msg
 viewQuote model =
     case model of
         Failure ->
-            UI.column
-                [ text "I could not load a random quote for some reason. "
-                , Input.button
-                    []
-                    { onPress = Just MorePlease
-                    , label = text "Try Again!"
-                    }
+            E.column []
+                [ E.text "I could not load a random quote for some reason. "
+                , UI.textButton MorePlease "Try Again!"
                 ]
 
         Loading ->
-            text "Loading..."
+            E.text "Loading..."
 
         Success quote ->
             renderQuote quote
@@ -99,20 +95,20 @@ viewQuote model =
 
 renderQuote : Quote -> Element Msg
 renderQuote quote =
-    UI.column
-        [ el [ padding 20 ] <| UI.textButton MorePlease "More Please!"
-        , textColumn [ spacing 10, padding 10, Border.solid, Border.rounded 20, Border.width 2 ]
-            [ paragraph []
+    E.column []
+        [ E.el [ E.padding 20 ] <| UI.textButton MorePlease "More Please!"
+        , E.textColumn [ E.spacing 10, E.padding 10, Border.solid, Border.rounded 20, Border.width 2 ]
+            [ E.paragraph []
                 [ -- , blockquote [] [ text quote.quote ]
-                  text quote.quote
+                  E.text quote.quote
                 ]
-            , el [ alignLeft ] none
-            , paragraph [ alignRight ]
-                [ text "— "
+            , E.el [ E.alignLeft ] E.none
+            , E.paragraph [ E.alignRight ]
+                [ E.text "— "
 
                 -- , cite [] [ text quote.source ]
-                , el [] (text quote.source)
-                , text (" by " ++ quote.author ++ " (" ++ String.fromInt quote.year ++ ")")
+                , E.el [] (E.text quote.source)
+                , E.text (" by " ++ quote.author ++ " (" ++ String.fromInt quote.year ++ ")")
                 ]
             ]
         ]

@@ -1,4 +1,4 @@
-module UI exposing (appLink, column, row, textButton)
+module UI exposing (appLink, textButton)
 
 import Element as E exposing (Element)
 import Element.Input as Input
@@ -23,13 +23,3 @@ appLink route txt =
 link : String -> String -> Element msg
 link path txt =
     E.link [] { url = path, label = E.text txt }
-
-
-row : List (Element msg) -> Element msg
-row elements =
-    E.row [] elements
-
-
-column : List (Element msg) -> Element msg
-column elements =
-    E.column [] elements

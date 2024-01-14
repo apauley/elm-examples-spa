@@ -2,11 +2,10 @@ module Main exposing (main)
 
 import Browser exposing (Document)
 import Browser.Navigation as Nav
-import Element exposing (..)
+import Element as E exposing (Element)
 import Element.Region as Region
 import Framework
 import Framework.Grid as Grid
-import Html exposing (Html)
 import Page.Counter
 import Page.Home
 import Page.ImagePreview
@@ -221,11 +220,11 @@ view model =
     { title = pageTitel
     , body =
         [ Framework.responsiveLayout [] <|
-            Element.el Framework.container <|
-                Element.column Grid.simple
-                    [ el [ Region.navigation ] navLinkView
-                    , el [ Region.mainContent ] pageContent
-                    , el [ Region.footer ] <| text "Footer text"
+            E.el Framework.container <|
+                E.column Grid.simple
+                    [ E.el [ Region.navigation ] navLinkView
+                    , E.el [ Region.mainContent ] pageContent
+                    , E.el [ Region.footer ] <| E.text "Footer text"
                     ]
         ]
     }
@@ -245,34 +244,34 @@ pageView model =
                 ( title, content ) =
                     Page.Counter.view model.pagesState.counter
             in
-            ( title, Element.map GotCounterMsg content )
+            ( title, E.map GotCounterMsg content )
 
         Just Route.ImagePreview ->
             let
                 ( title, content ) =
                     Page.ImagePreview.view model.pagesState.imagePreview
             in
-            ( title, Element.map GotImagePreviewMsg content )
+            ( title, E.map GotImagePreviewMsg content )
 
         Just Route.Upload ->
             let
                 ( title, content ) =
                     Page.Upload.view model.pagesState.upload
             in
-            ( title, Element.map GotUploadMsg content )
+            ( title, E.map GotUploadMsg content )
 
         Just Route.Quotes ->
             let
                 ( title, content ) =
                     Page.Quotes.view model.pagesState.quotes
             in
-            ( title, Element.map GotQuotesMsg content )
+            ( title, E.map GotQuotesMsg content )
 
 
 navLinkView : Element msg
 navLinkView =
-    UI.row
-        [ el [ alignLeft ] <| UI.row navLinks ]
+    E.row []
+        [ E.el [ E.alignLeft ] <| E.row [] navLinks ]
 
 
 navLinks : List (Element msg)
