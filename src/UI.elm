@@ -1,4 +1,4 @@
-module UI exposing (appLink, textButton)
+module UI exposing (appLink, externalLink, textButton)
 
 import Element as E exposing (Element)
 import Element.Input as Input
@@ -18,6 +18,11 @@ textButton msg buttonText =
 appLink : Route -> String -> Element msg
 appLink route txt =
     link (Route.toPath route) txt
+
+
+externalLink : String -> String -> Element msg
+externalLink url txt =
+    link url txt
 
 
 link : String -> String -> Element msg

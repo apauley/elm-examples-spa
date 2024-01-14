@@ -221,11 +221,14 @@ view model =
     , body =
         [ Framework.responsiveLayout [] <|
             E.el Framework.container <|
-                E.column Grid.simple
-                    [ E.el [ Region.navigation ] topBarNavLinks
-                    , E.row []
+                E.column [ E.width E.fill ]
+                    [ E.row [ E.width E.fill ]
+                        [ E.el [ Region.navigation, E.alignLeft ] <| UI.appLink Route.Home "Home"
+                        , E.el [ Region.navigation, E.alignRight ] topBarNavLinks
+                        ]
+                    , E.row [ E.width E.fill ]
                         [ E.el [ Region.navigation, E.alignTop ] sideBarNavLinks
-                        , E.el [ Region.mainContent ] pageContent
+                        , E.el [ Region.mainContent, E.width E.fill ] pageContent
                         ]
                     ]
         ]
@@ -272,14 +275,14 @@ pageView model =
 
 topBarNavLinks : Element msg
 topBarNavLinks =
-    E.row []
-        [ E.el [ E.alignLeft ] <| E.column [] [ UI.appLink Route.Home "Home" ] ]
+    E.row [] [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub" ]
 
 
 sideBarNavLinks : Element msg
 sideBarNavLinks =
     E.column []
-        [ UI.appLink Route.Counter "Counter"
+        [ E.el [ E.padding 50 ] E.none
+        , UI.appLink Route.Counter "Counter"
         , UI.appLink Route.ImagePreview "Image Preview"
         , UI.appLink Route.Upload "File Upload"
         , UI.appLink Route.Quotes "Quotes"
