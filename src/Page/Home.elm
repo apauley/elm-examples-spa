@@ -1,7 +1,7 @@
 module Page.Home exposing (view)
 
 import Element as E exposing (Element)
-import Framework.Heading as Heading
+import Html
 import UI
 
 
@@ -9,7 +9,7 @@ view : ( String, Element msg )
 view =
     ( "Home"
     , E.column [ E.width E.fill ]
-        [ E.el (Heading.h1 ++ [ E.centerX ]) <| E.text "Elm Examples"
+        [ E.el [ E.centerX ] <| E.html <| Html.h1 [] <| [ Html.text "Elm Examples" ]
         , E.paragraph []
             [ E.text "An Elm single-page application with running examples from "
             , UI.externalLink "https://elm-lang.org/examples" "elm-lang.org"

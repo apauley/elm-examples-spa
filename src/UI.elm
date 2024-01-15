@@ -2,14 +2,12 @@ module UI exposing (appLink, externalLink, textButton)
 
 import Element as E exposing (Element)
 import Element.Input as Input
-import Framework.Button as Button
-import Framework.Color as Color
 import Route exposing (Route)
 
 
 textButton : msg -> String -> Element msg
 textButton msg buttonText =
-    Input.button (Button.simple ++ Color.primary)
+    Input.button []
         { label = E.text buttonText
         , onPress = Just msg
         }

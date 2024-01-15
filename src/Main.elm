@@ -4,8 +4,6 @@ import Browser exposing (Document)
 import Browser.Navigation as Nav
 import Element as E exposing (Element)
 import Element.Region as Region
-import Framework
-import Framework.Grid as Grid
 import Page.Counter
 import Page.Home
 import Page.ImagePreview
@@ -219,14 +217,15 @@ view model =
     in
     { title = pageTitel
     , body =
-        [ Framework.responsiveLayout [] <|
-            E.el Framework.container <|
+        [ E.layout [] <|
+            E.el [ E.width E.fill ] <|
                 E.column [ E.width E.fill ]
                     [ E.row [ E.width E.fill ]
                         [ E.el [ Region.navigation, E.alignLeft ] <| UI.appLink Route.Home "Home"
                         , E.el [ Region.navigation, E.alignRight ] topBarNavLinks
                         ]
-                    , E.row [ E.width E.fill ]
+                    , E.el [ E.padding 5 ] E.none
+                    , E.row [ E.width E.fill, E.spacing 50 ]
                         [ E.el [ Region.navigation, E.alignTop ] sideBarNavLinks
                         , E.el [ Region.mainContent, E.width E.fill ] pageContent
                         ]
@@ -281,8 +280,7 @@ topBarNavLinks =
 sideBarNavLinks : Element msg
 sideBarNavLinks =
     E.column []
-        [ E.el [ E.padding 50 ] E.none
-        , UI.appLink Route.Counter "Counter"
+        [ UI.appLink Route.Counter "Counter"
         , UI.appLink Route.ImagePreview "Image Preview"
         , UI.appLink Route.Upload "File Upload"
         , UI.appLink Route.Quotes "Quotes"
