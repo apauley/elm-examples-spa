@@ -17,8 +17,6 @@ suite =
                 \_ -> Route.toPath Route.Counter |> Expect.equal "/elm-examples-spa/counter"
             , test "Route.ImagePreview" <|
                 \_ -> Route.toPath Route.ImagePreview |> Expect.equal "/elm-examples-spa/preview"
-            , test "Route.Upload" <|
-                \_ -> Route.toPath Route.Upload |> Expect.equal "/elm-examples-spa/upload"
             , test "Route.Quotes" <|
                 \_ -> Route.toPath Route.Quotes |> Expect.equal "/elm-examples-spa/quotes"
             ]
@@ -44,8 +42,6 @@ fromUrlTests =
             , ( "/elm-examples-spa/counter/", Route.Counter )
             , ( "/preview", Route.ImagePreview )
             , ( "/elm-examples-spa/preview", Route.ImagePreview )
-            , ( "/upload", Route.Upload )
-            , ( "/elm-examples-spa/upload", Route.Upload )
             , ( "/quotes", Route.Quotes )
             , ( "/elm-examples-spa/quotes", Route.Quotes )
             ]

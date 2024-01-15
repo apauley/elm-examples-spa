@@ -9,7 +9,6 @@ type Route
     = Home
     | Counter
     | ImagePreview
-    | Upload
     | Quotes
 
 
@@ -32,9 +31,6 @@ toPath route =
                 ImagePreview ->
                     "preview"
 
-                Upload ->
-                    "upload"
-
                 Quotes ->
                     "quotes"
             ]
@@ -51,7 +47,6 @@ parser =
         [ Parser.map Home Parser.top
         , Parser.map Counter (s "counter")
         , Parser.map ImagePreview (s "preview")
-        , Parser.map Upload (s "upload")
         , Parser.map Quotes (s "quotes")
         ]
 

@@ -9,7 +9,6 @@ import Page.Home
 import Page.ImagePreview
 import Page.NotFound
 import Page.Quotes
-import Page.Upload
 import Platform.Cmd as Cmd
 import Route exposing (Route)
 import UI
@@ -38,7 +37,6 @@ type alias Model =
 type alias PagesState =
     { counter : Page.Counter.Model
     , imagePreview : Page.ImagePreview.Model
-    , upload : Page.Upload.Model
     , quotes : Page.Quotes.Model
     }
 
@@ -71,7 +69,6 @@ pagesInit =
     in
     ( { counter = counterModel
       , imagePreview = Page.ImagePreview.init
-      , upload = Page.Upload.init
       , quotes = quotesModel
       }
     , cmd
@@ -83,7 +80,6 @@ type Msg
     | UrlChanged Url.Url
     | GotCounterMsg Page.Counter.Msg
     | GotImagePreviewMsg Page.ImagePreview.Msg
-    | GotUploadMsg Page.Upload.Msg
     | GotQuotesMsg Page.Quotes.Msg
     | GotMenuMsg Int
 
@@ -109,9 +105,6 @@ update msg model =
 
         GotImagePreviewMsg subMsg ->
             updateImagePreview model subMsg
-
-        GotUploadMsg subMsg ->
-            updateUpload model subMsg
 
         GotQuotesMsg subMsg ->
             updateQuotes model subMsg
@@ -183,27 +176,6 @@ updateImagePreview model subMsg =
     ( newModel, Cmd.map GotImagePreviewMsg pageCmd )
 
 
-updateUpload : Model -> Page.Upload.Msg -> ( Model, Cmd Msg )
-updateUpload model subMsg =
-    let
-        pageModels =
-            model.pagesState
-
-        previousPageModel =
-            pageModels.upload
-
-        ( newPageModel, pageCmd ) =
-            Page.Upload.update subMsg previousPageModel
-
-        newPages =
-            { pageModels | upload = newPageModel }
-
-        newModel =
-            { model | pagesState = newPages }
-    in
-    ( newModel, Cmd.map GotUploadMsg pageCmd )
-
-
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.none
@@ -257,13 +229,6 @@ pageView model =
             in
             ( title, E.map GotImagePreviewMsg content )
 
-        Just Route.Upload ->
-            let
-                ( title, content ) =
-                    Page.Upload.view model.pagesState.upload
-            in
-            ( title, E.map GotUploadMsg content )
-
         Just Route.Quotes ->
             let
                 ( title, content ) =
@@ -282,6 +247,5 @@ sideBarNavLinks =
     E.column []
         [ UI.appLink Route.Counter "Counter"
         , UI.appLink Route.ImagePreview "Image Preview"
-        , UI.appLink Route.Upload "File Upload"
         , UI.appLink Route.Quotes "Quotes"
         ]
