@@ -1,28 +1,31 @@
-module UI exposing (appLink, externalLink, textButton)
+module UI exposing (appLink, column, externalLink, textButton)
 
-import Element as E exposing (Element)
-import Element.Input as Input
+import Html exposing (Html)
+import Html.Attributes exposing (class, href)
+import Html.Events exposing (onClick)
 import Route exposing (Route)
 
 
-textButton : msg -> String -> Element msg
+textButton : msg -> String -> Html msg
 textButton msg buttonText =
-    Input.button []
-        { label = E.text buttonText
-        , onPress = Just msg
-        }
+    Html.button [ onClick msg ] [ Html.text buttonText ]
 
 
-appLink : Route -> String -> Element msg
+appLink : Route -> String -> Html msg
 appLink route txt =
     link (Route.toPath route) txt
 
 
-externalLink : String -> String -> Element msg
+externalLink : String -> String -> Html msg
 externalLink url txt =
     link url txt
 
 
-link : String -> String -> Element msg
+link : String -> String -> Html msg
 link path txt =
-    E.link [] { url = path, label = E.text txt }
+    Html.a [ href path ] [ Html.text txt ]
+
+
+column : List (Html msg) -> Html msg
+column elements =
+    Html.div [ class "grid" ] elements

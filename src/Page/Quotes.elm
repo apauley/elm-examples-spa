@@ -6,11 +6,9 @@ module Page.Quotes exposing (Model(..), Msg, init, update, view)
 --   https://guide.elm-lang.org/effects/json.html
 --
 
-import Element as E exposing (Element)
-import Element.Border as Border
-import Element.Input as Input
-import Element.Region as Region
-import Html exposing (Html)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Http
 import Json.Decode exposing (Decoder, field, int, map4, string)
 import UI
@@ -67,51 +65,38 @@ update msg _ =
 -- VIEW
 
 
-view : Model -> ( String, Element Msg )
+view : Model -> ( String, Html Msg )
 view model =
-    ( "Random Quotes"
-    , E.column []
-        [ E.el [ Region.heading 1 ] <| E.html <| Html.h1 [] [ Html.text "Random Quotes" ]
+    ( "•Random Quotes•"
+    , div []
+        [ h2 [] [ text "Random Quotes" ]
         , viewQuote model
         ]
     )
 
 
-viewQuote : Model -> Element Msg
+viewQuote : Model -> Html Msg
 viewQuote model =
     case model of
         Failure ->
-            E.column []
-                [ E.text "I could not load a random quote for some reason. "
-                , UI.textButton MorePlease "Try Again!"
+            div []
+                [ text "I could not load a random quote for some reason. "
+                , button [ onClick MorePlease ] [ text "Try Again!" ]
                 ]
 
         Loading ->
-            E.text "Loading..."
+            text "Loading..."
 
         Success quote ->
-            renderQuote quote
-
-
-renderQuote : Quote -> Element Msg
-renderQuote quote =
-    E.column []
-        [ E.el [ E.padding 20 ] <| UI.textButton MorePlease "More Please!"
-        , E.textColumn [ E.spacing 10, E.padding 10, Border.solid, Border.rounded 20, Border.width 2 ]
-            [ E.paragraph []
-                [ -- , blockquote [] [ text quote.quote ]
-                  E.text quote.quote
+            div []
+                [ button [ onClick MorePlease ] [ text "More Please!" ]
+                , blockquote [] [ text quote.quote ]
+                , p [ style "text-align" "right" ]
+                    [ text "— "
+                    , Html.cite [] [ text quote.source ]
+                    , text (" by " ++ quote.author ++ " (" ++ String.fromInt quote.year ++ ")")
+                    ]
                 ]
-            , E.el [ E.alignLeft ] E.none
-            , E.paragraph [ E.alignRight ]
-                [ E.text "— "
-
-                -- , cite [] [ text quote.source ]
-                , E.el [] (E.text quote.source)
-                , E.text (" by " ++ quote.author ++ " (" ++ String.fromInt quote.year ++ ")")
-                ]
-            ]
-        ]
 
 
 

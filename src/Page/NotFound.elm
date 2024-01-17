@@ -1,10 +1,10 @@
 module Page.NotFound exposing (view)
 
-import Element exposing (..)
+import Html exposing (..)
 
 
-view : ( String, Element msg )
+view : ( String, Html msg )
 view =
-    ( "Not Found"
-    , el [ padding 200 ] <| text "Page not found"
+    ( "•Not Found•"
+    , div [] [ text "Page not found" ]
     )

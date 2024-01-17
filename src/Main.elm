@@ -2,8 +2,9 @@ module Main exposing (main)
 
 import Browser exposing (Document)
 import Browser.Navigation as Nav
-import Element as E exposing (Element)
-import Element.Region as Region
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Page.Counter
 import Page.Home
 import Page.ImagePreview
@@ -189,24 +190,15 @@ view model =
     in
     { title = pageTitel
     , body =
-        [ E.layout [] <|
-            E.el [ E.width E.fill ] <|
-                E.column [ E.width E.fill ]
-                    [ E.row [ E.width E.fill ]
-                        [ E.el [ Region.navigation, E.alignLeft ] <| UI.appLink Route.Home "Home"
-                        , E.el [ Region.navigation, E.alignRight ] topBarNavLinks
-                        ]
-                    , E.el [ E.padding 5 ] E.none
-                    , E.row [ E.width E.fill, E.spacing 50 ]
-                        [ E.el [ Region.navigation, E.alignTop ] sideBarNavLinks
-                        , E.el [ Region.mainContent, E.width E.fill ] pageContent
-                        ]
-                    ]
+        [ Html.header [] [ topBarNavLinks ]
+        , Html.main_ [ class "container" ] [ pageContent ]
+        , Html.footer []
+            [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub" ]
         ]
     }
 
 
-pageView : Model -> ( String, Element Msg )
+pageView : Model -> ( String, Html Msg )
 pageView model =
     case model.route of
         Nothing ->
@@ -220,32 +212,30 @@ pageView model =
                 ( title, content ) =
                     Page.Counter.view model.pagesState.counter
             in
-            ( title, E.map GotCounterMsg content )
+            ( title, Html.map GotCounterMsg content )
 
         Just Route.ImagePreview ->
             let
                 ( title, content ) =
                     Page.ImagePreview.view model.pagesState.imagePreview
             in
-            ( title, E.map GotImagePreviewMsg content )
+            ( title, Html.map GotImagePreviewMsg content )
 
         Just Route.Quotes ->
             let
                 ( title, content ) =
                     Page.Quotes.view model.pagesState.quotes
             in
-            ( title, E.map GotQuotesMsg content )
+            ( title, Html.map GotQuotesMsg content )
 
 
-topBarNavLinks : Element msg
+topBarNavLinks : Html msg
 topBarNavLinks =
-    E.row [] [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub" ]
-
-
-sideBarNavLinks : Element msg
-sideBarNavLinks =
-    E.column []
-        [ UI.appLink Route.Counter "Counter"
-        , UI.appLink Route.ImagePreview "Image Preview"
-        , UI.appLink Route.Quotes "Quotes"
+    Html.nav []
+        [ Html.ul [] [ Html.li [] [ UI.appLink Route.Home "Home" ] ]
+        , Html.ul []
+            [ Html.li [] [ UI.appLink Route.Counter "Counter" ]
+            , Html.li [] [ UI.appLink Route.ImagePreview "Image Preview" ]
+            , Html.li [] [ UI.appLink Route.Quotes "Quotes" ]
+            ]
         ]
