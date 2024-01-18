@@ -206,7 +206,7 @@ view model =
     in
     { title = pageTitel
     , body =
-        [ Html.header [] [ topBarNavLinks model.url ]
+        [ topBarNavLinks model.url
         , Html.main_ [ class "container" ] [ pageContent ]
         , Html.footer []
             [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub"
@@ -253,11 +253,10 @@ pageView model =
 
 topBarNavLinks : Url.Url -> Html msg
 topBarNavLinks url =
-    Html.nav []
-        [ Html.ul [] [ Html.li [] [ UI.appLink url Route.Home "Home" ] ]
-        , Html.ul []
-            [ Html.li [] [ UI.appLink url Route.Counter "Counter" ]
-            , Html.li [] [ UI.appLink url Route.ImagePreview "Image Preview" ]
-            , Html.li [] [ UI.appLink url Route.Quotes "Quotes" ]
-            ]
+    UI.navBar
+        [ [ UI.appLink url Route.Home "Home" ]
+        , [ UI.appLink url Route.Counter "Counter"
+          , UI.appLink url Route.ImagePreview "Image Preview"
+          , UI.appLink url Route.Quotes "Quotes"
+          ]
         ]

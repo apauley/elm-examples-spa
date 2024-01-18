@@ -1,6 +1,6 @@
-module UI exposing (appLink, column, externalLink, textButton)
+module UI exposing (appLink, column, externalLink, navBar, textButton)
 
-import Html exposing (Html)
+import Html exposing (Html, col)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
 import Route exposing (Route)
@@ -25,6 +25,18 @@ externalLink url txt =
 link : String -> String -> Html msg
 link path txt =
     Html.a [ href path ] [ Html.text txt ]
+
+
+navBar : List (List (Html msg)) -> Html msg
+navBar outerList =
+    let
+        toListItem html =
+            Html.li [] [ html ]
+
+        uls =
+            List.map (\innerList -> Html.ul [] (List.map toListItem innerList)) outerList
+    in
+    Html.nav [] uls
 
 
 column : List (Html msg) -> Html msg
