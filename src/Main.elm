@@ -206,18 +206,30 @@ view model =
     in
     { title = pageTitel
     , body =
-        [ topBarNavLinks model.url
-        , Html.main_ [ class "container" ] [ pageContent ]
-        , Html.footer []
-            [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub"
-            , if model.preferences.darkMode then
-                UI.textButton ToggleDarkMode "To Light"
-
-              else
-                UI.textButton ToggleDarkMode "To Dark"
+        [ topBarNavLinks model
+        , Html.main_ [ class "grid" ]
+            [ Html.aside [] [ sideBarNavLinks model.url ]
+            , Html.div [ attribute "role" "document" ]
+                [ Html.section [ attribute "id" "start" ] [ pageContent ]
+                ]
             ]
+        , footer
         ]
     }
+
+
+footer =
+    Html.footer []
+        [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub"
+        ]
+
+
+themeToggleButton darkMode =
+    if darkMode then
+        UI.textButton ToggleDarkMode "Light Mode"
+
+    else
+        UI.textButton ToggleDarkMode "Dark Mode"
 
 
 pageView : Model -> ( String, Html Msg )
@@ -251,12 +263,30 @@ pageView model =
             ( title, Html.map GotQuotesMsg content )
 
 
-topBarNavLinks : Url.Url -> Html msg
-topBarNavLinks url =
+topBarNavLinks : Model -> Html Msg
+topBarNavLinks model =
     UI.navBar
-        [ [ UI.appLink url Route.Home "Home" ]
-        , [ UI.appLink url Route.Counter "Counter"
-          , UI.appLink url Route.ImagePreview "Image Preview"
-          , UI.appLink url Route.Quotes "Quotes"
-          ]
+        [ [ UI.appLink model.url Route.Home "Home" ]
+        , [ themeToggleButton model.preferences.darkMode ]
+        ]
+
+
+sideBarNavLinks : Url.Url -> Html msg
+sideBarNavLinks url =
+    Html.nav []
+        [ Html.details [ attribute "open" "true" ]
+            [ Html.summary [] [ Html.text "User Input" ]
+            , Html.ul []
+                [ Html.li [] [ UI.appLink url Route.Counter "Counter" ] ]
+            ]
+        , Html.details [ attribute "open" "true" ]
+            [ Html.summary [] [ Html.text "Files" ]
+            , Html.ul []
+                [ Html.li [] [ UI.appLink url Route.ImagePreview "Image Preview" ] ]
+            ]
+        , Html.details [ attribute "open" "true" ]
+            [ Html.summary [] [ Html.text "HTTP" ]
+            , Html.ul []
+                [ Html.li [] [ UI.appLink url Route.Quotes "Quotes" ] ]
+            ]
         ]
