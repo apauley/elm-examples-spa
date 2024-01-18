@@ -30,6 +30,7 @@ main =
 
 type alias Model =
     { navKey : Nav.Key
+    , url : Url.Url
     , route : Maybe Route
     , pagesState : PagesState
     }
@@ -49,6 +50,7 @@ init _ url navKey =
             pagesInit
     in
     ( { navKey = navKey
+      , url = url
       , route = Route.fromUrl url
       , pagesState = pagesState
       }
@@ -99,7 +101,7 @@ update msg model =
                     ( model, Nav.load href )
 
         UrlChanged url ->
-            ( { model | route = Route.fromUrl url }, Cmd.none )
+            ( { model | url = url, route = Route.fromUrl url }, Cmd.none )
 
         GotCounterMsg subMsg ->
             updateCounter model subMsg
@@ -190,7 +192,7 @@ view model =
     in
     { title = pageTitel
     , body =
-        [ Html.header [] [ topBarNavLinks ]
+        [ Html.header [] [ topBarNavLinks model.url ]
         , Html.main_ [ class "container" ] [ pageContent ]
         , Html.footer []
             [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub" ]
@@ -229,13 +231,13 @@ pageView model =
             ( title, Html.map GotQuotesMsg content )
 
 
-topBarNavLinks : Html msg
-topBarNavLinks =
+topBarNavLinks : Url.Url -> Html msg
+topBarNavLinks url =
     Html.nav []
-        [ Html.ul [] [ Html.li [] [ UI.appLink Route.Home "Home" ] ]
+        [ Html.ul [] [ Html.li [] [ UI.appLink url Route.Home "Home" ] ]
         , Html.ul []
-            [ Html.li [] [ UI.appLink Route.Counter "Counter" ]
-            , Html.li [] [ UI.appLink Route.ImagePreview "Image Preview" ]
-            , Html.li [] [ UI.appLink Route.Quotes "Quotes" ]
+            [ Html.li [] [ UI.appLink url Route.Counter "Counter" ]
+            , Html.li [] [ UI.appLink url Route.ImagePreview "Image Preview" ]
+            , Html.li [] [ UI.appLink url Route.Quotes "Quotes" ]
             ]
         ]

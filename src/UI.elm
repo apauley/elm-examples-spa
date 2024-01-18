@@ -4,6 +4,7 @@ import Html exposing (Html)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
 import Route exposing (Route)
+import Url
 
 
 textButton : msg -> String -> Html msg
@@ -11,9 +12,9 @@ textButton msg buttonText =
     Html.button [ onClick msg ] [ Html.text buttonText ]
 
 
-appLink : Route -> String -> Html msg
-appLink route txt =
-    link (Route.toPath route) txt
+appLink : Url.Url -> Route -> String -> Html msg
+appLink url route txt =
+    link (Route.toPath url route) txt
 
 
 externalLink : String -> String -> Html msg

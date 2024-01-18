@@ -16,24 +16,31 @@ subPath =
     "elm-examples-spa"
 
 
-toPath : Route -> String
-toPath route =
+toPath : Url.Url -> Route -> String
+toPath url route =
     let
+        subPathOrNot =
+            if String.contains subPath url.path then
+                [ subPath ]
+
+            else
+                []
+
         pathSegments =
-            [ subPath
-            , case route of
-                Home ->
-                    ""
+            subPathOrNot
+                ++ [ case route of
+                        Home ->
+                            ""
 
-                Counter ->
-                    "counter"
+                        Counter ->
+                            "counter"
 
-                ImagePreview ->
-                    "preview"
+                        ImagePreview ->
+                            "preview"
 
-                Quotes ->
-                    "quotes"
-            ]
+                        Quotes ->
+                            "quotes"
+                   ]
 
         queryParameters =
             []

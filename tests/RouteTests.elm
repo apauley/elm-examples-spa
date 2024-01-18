@@ -10,18 +10,27 @@ import Url exposing (Url)
 suite : Test
 suite =
     describe "The Route module"
-        [ describe "Route.toPath"
-            [ test "Route.Home" <|
-                \_ -> Route.toPath Route.Home |> Expect.equal "/elm-examples-spa/"
-            , test "Route.Counter" <|
-                \_ -> Route.toPath Route.Counter |> Expect.equal "/elm-examples-spa/counter"
-            , test "Route.ImagePreview" <|
-                \_ -> Route.toPath Route.ImagePreview |> Expect.equal "/elm-examples-spa/preview"
-            , test "Route.Quotes" <|
-                \_ -> Route.toPath Route.Quotes |> Expect.equal "/elm-examples-spa/quotes"
+        [ toPathTests, fromUrlTests ]
+
+
+toPathTests : Test
+toPathTests =
+    let
+        toExpectation ( url, route, path ) =
+            test ("Route.toPath " ++ path) <|
+                \_ -> Route.toPath url route |> Expect.equal path
+    in
+    describe "Route.toPath" <|
+        List.map toExpectation
+            [ ( homeWithoutSubPath, Route.Home, "/" )
+            , ( homeWithSubPath, Route.Home, "/elm-examples-spa/" )
+            , ( homeWithoutSubPath, Route.Counter, "/counter" )
+            , ( homeWithSubPath, Route.Counter, "/elm-examples-spa/counter" )
+            , ( homeWithoutSubPath, Route.ImagePreview, "/preview" )
+            , ( homeWithSubPath, Route.ImagePreview, "/elm-examples-spa/preview" )
+            , ( homeWithoutSubPath, Route.Quotes, "/quotes" )
+            , ( homeWithSubPath, Route.Quotes, "/elm-examples-spa/quotes" )
             ]
-        , fromUrlTests
-        ]
 
 
 fromUrlTests : Test
@@ -45,6 +54,16 @@ fromUrlTests =
             , ( "/quotes", Route.Quotes )
             , ( "/elm-examples-spa/quotes", Route.Quotes )
             ]
+
+
+homeWithSubPath : Url
+homeWithSubPath =
+    urlWithPath "/elm-examples-spa"
+
+
+homeWithoutSubPath : Url
+homeWithoutSubPath =
+    urlWithPath "/"
 
 
 urlWithPath : String -> Url
