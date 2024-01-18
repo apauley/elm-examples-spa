@@ -5,6 +5,7 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import JSPorts
 import Page.Counter
 import Page.Home
 import Page.ImagePreview
@@ -16,7 +17,7 @@ import UI
 import Url
 
 
-main : Program () Model Msg
+main : Program String Model Msg
 main =
     Browser.application
         { init = init
@@ -28,10 +29,15 @@ main =
         }
 
 
+type alias Preferences =
+    { darkMode : Bool }
+
+
 type alias Model =
     { navKey : Nav.Key
     , url : Url.Url
     , route : Maybe Route
+    , preferences : Preferences
     , pagesState : PagesState
     }
 
@@ -43,8 +49,8 @@ type alias PagesState =
     }
 
 
-init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init _ url navKey =
+init : String -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init theme url navKey =
     let
         ( pagesState, cmd ) =
             pagesInit
@@ -52,6 +58,7 @@ init _ url navKey =
     ( { navKey = navKey
       , url = url
       , route = Route.fromUrl url
+      , preferences = { darkMode = theme == "dark" }
       , pagesState = pagesState
       }
     , cmd
@@ -81,10 +88,10 @@ pagesInit =
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
+    | ToggleDarkMode
     | GotCounterMsg Page.Counter.Msg
     | GotImagePreviewMsg Page.ImagePreview.Msg
     | GotQuotesMsg Page.Quotes.Msg
-    | GotMenuMsg Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -103,6 +110,16 @@ update msg model =
         UrlChanged url ->
             ( { model | url = url, route = Route.fromUrl url }, Cmd.none )
 
+        ToggleDarkMode ->
+            let
+                prefs =
+                    model.preferences
+
+                newPrefs =
+                    { prefs | darkMode = not prefs.darkMode }
+            in
+            ( { model | preferences = newPrefs }, JSPorts.setDarkMode newPrefs.darkMode )
+
         GotCounterMsg subMsg ->
             updateCounter model subMsg
 
@@ -111,9 +128,6 @@ update msg model =
 
         GotQuotesMsg subMsg ->
             updateQuotes model subMsg
-
-        GotMenuMsg i ->
-            ( model, Cmd.none )
 
 
 updateQuotes : Model -> Page.Quotes.Msg -> ( Model, Cmd Msg )
@@ -195,7 +209,13 @@ view model =
         [ Html.header [] [ topBarNavLinks model.url ]
         , Html.main_ [ class "container" ] [ pageContent ]
         , Html.footer []
-            [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub" ]
+            [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub"
+            , if model.preferences.darkMode then
+                UI.textButton ToggleDarkMode "To Light"
+
+              else
+                UI.textButton ToggleDarkMode "To Dark"
+            ]
         ]
     }
 
