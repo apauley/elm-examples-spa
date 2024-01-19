@@ -36,7 +36,7 @@ navBar outerList =
         uls =
             List.map (\innerList -> Html.ul [] (List.map toListItem innerList)) outerList
     in
-    Html.nav [ class "container-fluid" ] uls
+    Html.nav [] uls
 
 
 column : List (Html msg) -> Html msg

@@ -207,10 +207,10 @@ view model =
     { title = pageTitel
     , body =
         [ topBarNavLinks model
-        , Html.main_ [ class "grid" ]
-            [ Html.aside [] [ sideBarNavLinks model.url ]
-            , Html.div [ attribute "role" "document" ]
-                [ Html.section [ attribute "id" "start" ] [ pageContent ]
+        , Html.main_ [ class "container-fluid" ]
+            [ Html.div [ class "row" ]
+                [ Html.div [ class "col-2" ] [ Html.aside [] [ sideBarNavLinks model.url ] ]
+                , Html.div [ class "col" ] [ Html.section [] [ pageContent ] ]
                 ]
             ]
         , footer
