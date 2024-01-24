@@ -206,22 +206,16 @@ view model =
     in
     { title = pageTitel
     , body =
-        [ topBarNavLinks model
-        , Html.main_ [ class "container-fluid" ]
-            [ Html.div [ class "row" ]
-                [ Html.div [ class "col-2" ] [ Html.aside [] [ sideBarNavLinks model.url ] ]
-                , Html.div [ class "col" ] [ Html.section [] [ pageContent ] ]
+        [ Html.main_ []
+            [ Html.header [] [ topBarNavLinks model ]
+            , Html.aside [] [ sideBarNavLinks model.url ]
+            , Html.section [] [ pageContent ]
+            , Html.footer []
+                [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub"
                 ]
             ]
-        , footer
         ]
     }
-
-
-footer =
-    Html.footer []
-        [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub"
-        ]
 
 
 themeToggleButton darkMode =
@@ -271,22 +265,11 @@ topBarNavLinks model =
         ]
 
 
-sideBarNavLinks : Url.Url -> Html msg
+sideBarNavLinks : Url.Url -> Html Msg
 sideBarNavLinks url =
-    Html.nav []
-        [ Html.details [ attribute "open" "true" ]
-            [ Html.summary [] [ Html.text "User Input" ]
-            , Html.ul []
-                [ Html.li [] [ UI.appLink url Route.Counter "Counter" ] ]
-            ]
-        , Html.details [ attribute "open" "true" ]
-            [ Html.summary [] [ Html.text "Files" ]
-            , Html.ul []
-                [ Html.li [] [ UI.appLink url Route.ImagePreview "Image Preview" ] ]
-            ]
-        , Html.details [ attribute "open" "true" ]
-            [ Html.summary [] [ Html.text "HTTP" ]
-            , Html.ul []
-                [ Html.li [] [ UI.appLink url Route.Quotes "Quotes" ] ]
-            ]
+    UI.navBar
+        [ [ UI.appLink url Route.Counter "Counter"
+          , UI.appLink url Route.ImagePreview "Image Preview"
+          , UI.appLink url Route.Quotes "Quotes"
+          ]
         ]

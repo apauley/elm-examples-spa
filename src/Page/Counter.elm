@@ -41,15 +41,13 @@ title model =
 view : Model -> ( String, Html Msg )
 view model =
     ( title model
-    , div []
-        [ p []
-            [ Html.h1 [] [ Html.text "Counter" ]
-            , Html.div [ class "grid" ]
-                [ UI.textButton Decrement "-"
-                , Html.text (String.fromInt model)
-                , UI.textButton Increment "+"
-                ]
-            , UI.textButton Reset "Reset"
+    , p []
+        [ Html.h1 [] [ Html.text "Counter" ]
+        , Html.div [ class "grid" ]
+            [ UI.textButton Decrement "-"
+            , Html.text (String.fromInt model)
+            , UI.textButton Increment "+"
             ]
+        , UI.textButton Reset "Reset"
         ]
     )
