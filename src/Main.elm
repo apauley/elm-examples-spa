@@ -9,6 +9,7 @@ import JSPorts
 import Page.Counter
 import Page.Home
 import Page.ImagePreview
+import Page.InternationalDate
 import Page.NotFound
 import Page.Quotes
 import Platform.Cmd as Cmd
@@ -46,6 +47,7 @@ type alias PagesState =
     { counter : Page.Counter.Model
     , imagePreview : Page.ImagePreview.Model
     , quotes : Page.Quotes.Model
+    , intlDate : Page.InternationalDate.Model
     }
 
 
@@ -74,12 +76,16 @@ pagesInit =
         ( counterModel, counterCmd ) =
             Page.Counter.init
 
+        ( dateModel, dateCmd ) =
+            Page.InternationalDate.init
+
         cmd =
             Cmd.batch [ Cmd.map GotCounterMsg counterCmd, Cmd.map GotQuotesMsg quotesCmd ]
     in
     ( { counter = counterModel
       , imagePreview = Page.ImagePreview.init
       , quotes = quotesModel
+      , intlDate = dateModel
       }
     , cmd
     )
@@ -92,6 +98,7 @@ type Msg
     | GotCounterMsg Page.Counter.Msg
     | GotImagePreviewMsg Page.ImagePreview.Msg
     | GotQuotesMsg Page.Quotes.Msg
+    | GotDateMsg Page.InternationalDate.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -128,6 +135,30 @@ update msg model =
 
         GotQuotesMsg subMsg ->
             updateQuotes model subMsg
+
+        GotDateMsg subMsg ->
+            updateInternationalDate model subMsg
+
+
+updateInternationalDate : Model -> Page.InternationalDate.Msg -> ( Model, Cmd Msg )
+updateInternationalDate model subMsg =
+    let
+        pageModels =
+            model.pagesState
+
+        previousPageModel =
+            pageModels.intlDate
+
+        ( newPageModel, pageCmd ) =
+            Page.InternationalDate.update subMsg previousPageModel
+
+        newPages =
+            { pageModels | intlDate = newPageModel }
+
+        newModel =
+            { model | pagesState = newPages }
+    in
+    ( newModel, Cmd.map GotDateMsg pageCmd )
 
 
 updateQuotes : Model -> Page.Quotes.Msg -> ( Model, Cmd Msg )
@@ -256,6 +287,13 @@ pageView model =
             in
             ( title, Html.map GotQuotesMsg content )
 
+        Just Route.InternationalDate ->
+            let
+                ( title, content ) =
+                    Page.InternationalDate.view model.pagesState.intlDate
+            in
+            ( title, Html.map GotDateMsg content )
+
 
 topBarNavLinks : Model -> Html Msg
 topBarNavLinks model =
@@ -273,5 +311,6 @@ sideBarNavLinks url =
         [ [ UI.appLink url Route.Counter "Counter"
           , UI.appLink url Route.ImagePreview "Image Preview"
           , UI.appLink url Route.Quotes "Quotes"
+          , UI.appLink url Route.InternationalDate "International Date"
           ]
         ]

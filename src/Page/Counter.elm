@@ -1,6 +1,6 @@
 module Page.Counter exposing (Model, Msg, init, update, view)
 
-import Html exposing (..)
+import Html exposing (Html)
 import Html.Attributes exposing (..)
 import UI
 
@@ -41,7 +41,7 @@ title model =
 view : Model -> ( String, Html Msg )
 view model =
     ( title model
-    , p []
+    , Html.article []
         [ Html.h1 [] [ Html.text "Counter" ]
         , Html.div [ class "grid" ]
             [ UI.textButton Decrement "-"

@@ -11,7 +11,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Json.Decode exposing (Decoder, field, int, map4, string)
-import UI
 
 
 
@@ -68,7 +67,7 @@ update msg _ =
 view : Model -> ( String, Html Msg )
 view model =
     ( "•Random Quotes•"
-    , div []
+    , Html.article []
         [ h2 [] [ text "Random Quotes" ]
         , viewQuote model
         ]

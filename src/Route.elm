@@ -10,6 +10,7 @@ type Route
     | Counter
     | ImagePreview
     | Quotes
+    | InternationalDate
 
 
 subPath =
@@ -40,6 +41,9 @@ toPath url route =
 
                         Quotes ->
                             "quotes"
+
+                        InternationalDate ->
+                            "intl-date"
                    ]
 
         queryParameters =
@@ -55,6 +59,7 @@ parser =
         , Parser.map Counter (s "counter")
         , Parser.map ImagePreview (s "preview")
         , Parser.map Quotes (s "quotes")
+        , Parser.map InternationalDate (s "intl-date")
         ]
 
 
