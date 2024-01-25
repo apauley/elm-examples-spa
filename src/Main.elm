@@ -6,6 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import JSPorts
+import Page.CodeMirror
 import Page.Counter
 import Page.Home
 import Page.ImagePreview
@@ -113,6 +114,7 @@ type Msg
     | GotImagePreviewMsg Page.ImagePreview.Msg
     | GotQuotesMsg Page.Quotes.Msg
     | GotDateMsg Page.InternationalDate.Msg
+    | GotCodeMirrorMsg Page.CodeMirror.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -162,6 +164,9 @@ update msg model =
 
         GotDateMsg subMsg ->
             updateInternationalDate model subMsg
+
+        GotCodeMirrorMsg subMsg ->
+            ( model, Cmd.none )
 
 
 updateTime : TimeStamp -> Time.Posix -> TimeStamp
@@ -330,6 +335,13 @@ pageView model =
             in
             ( title, Html.map GotDateMsg content )
 
+        Just Route.CodeMirror ->
+            let
+                ( title, content ) =
+                    Page.CodeMirror.view Page.CodeMirror.initialModel
+            in
+            ( title, Html.map GotCodeMirrorMsg content )
+
 
 topBarNavLinks : Model -> Html Msg
 topBarNavLinks model =
@@ -346,6 +358,7 @@ sideBarNavLinks url =
           , UI.appLink url Route.ImagePreview "Image Preview"
           , UI.appLink url Route.Quotes "Quotes"
           , UI.appLink url Route.InternationalDate "International Date"
+          , UI.appLink url Route.CodeMirror "Code Mirror"
           ]
         ]
 

@@ -11,6 +11,7 @@ type Route
     | ImagePreview
     | Quotes
     | InternationalDate
+    | CodeMirror
 
 
 subPath =
@@ -44,6 +45,9 @@ toPath url route =
 
                         InternationalDate ->
                             "intl-date"
+
+                        CodeMirror ->
+                            "code"
                    ]
 
         queryParameters =
@@ -60,6 +64,7 @@ parser =
         , Parser.map ImagePreview (s "preview")
         , Parser.map Quotes (s "quotes")
         , Parser.map InternationalDate (s "intl-date")
+        , Parser.map CodeMirror (s "code")
         ]
 
 
