@@ -1,7 +1,7 @@
 main {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 2rem;
+    column-gap: 2rem;
 }
 
 header {

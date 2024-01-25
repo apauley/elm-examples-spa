@@ -261,7 +261,9 @@ topBarNavLinks : Model -> Html Msg
 topBarNavLinks model =
     UI.navBar
         [ [ UI.appLink model.url Route.Home "Home" ]
-        , [ themeToggleButton model.preferences.darkMode ]
+        , [ themeToggleButton model.preferences.darkMode
+          , UI.appLink model.url Route.Home "" -- This invisible link is a way for someone who doesn't know CSS to add a gap after the toggle button
+          ]
         ]
 
 
