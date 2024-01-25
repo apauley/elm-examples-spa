@@ -1,4 +1,4 @@
-module TimeStamp exposing (TimeStamp, toString)
+module TimeStamp exposing (TimeStamp, toDay, toHour, toMinute, toMonth, toSecond, toString, toYear)
 
 import Time exposing (..)
 
@@ -74,29 +74,59 @@ toEnglishWeekday weekday =
             "Sunday"
 
 
+toYear : TimeStamp -> Int
+toYear timestamp =
+    Time.toYear timestamp.zone timestamp.time
+
+
+toMonth : TimeStamp -> Month
+toMonth timestamp =
+    Time.toMonth timestamp.zone timestamp.time
+
+
+toDay : TimeStamp -> Int
+toDay timestamp =
+    Time.toDay timestamp.zone timestamp.time
+
+
+toHour : TimeStamp -> Int
+toHour timestamp =
+    Time.toHour timestamp.zone timestamp.time
+
+
+toMinute : TimeStamp -> Int
+toMinute timestamp =
+    Time.toMinute timestamp.zone timestamp.time
+
+
+toSecond : TimeStamp -> Int
+toSecond timestamp =
+    Time.toSecond timestamp.zone timestamp.time
+
+
 toString : TimeStamp -> String
 toString timestamp =
     let
         year =
-            String.fromInt (Time.toYear timestamp.zone timestamp.time)
+            timestamp |> toYear |> String.fromInt
 
         month =
-            toEnglishMonth (Time.toMonth timestamp.zone timestamp.time)
+            timestamp |> toMonth |> toEnglishMonth
 
         day =
-            String.fromInt (Time.toDay timestamp.zone timestamp.time) |> String.padLeft 2 '0'
+            timestamp |> toDay |> String.fromInt |> String.padLeft 2 '0'
 
         weekday =
             toEnglishWeekday (Time.toWeekday timestamp.zone timestamp.time)
 
         hour =
-            String.fromInt (Time.toHour timestamp.zone timestamp.time) |> String.padLeft 2 '0'
+            timestamp |> toHour |> String.fromInt |> String.padLeft 2 '0'
 
         minute =
-            String.fromInt (Time.toMinute timestamp.zone timestamp.time) |> String.padLeft 2 '0'
+            timestamp |> toMinute |> String.fromInt |> String.padLeft 2 '0'
 
         second =
-            String.fromInt (Time.toSecond timestamp.zone timestamp.time) |> String.padLeft 2 '0'
+            timestamp |> toSecond |> String.fromInt |> String.padLeft 2 '0'
 
         date =
             String.join " " [ month, day, year ]

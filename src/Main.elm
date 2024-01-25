@@ -58,13 +58,16 @@ type alias PagesState =
 init : String -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init theme url navKey =
     let
+        timestamp =
+            TimeStamp Time.utc (Time.millisToPosix 0)
+
         ( pagesState, pagesCmd ) =
             pagesInit
     in
     ( { navKey = navKey
       , url = url
       , route = Route.fromUrl url
-      , timestamp = TimeStamp Time.utc (Time.millisToPosix 0)
+      , timestamp = timestamp
       , preferences = { darkMode = theme == "dark" }
       , pagesState = pagesState
       }
@@ -82,7 +85,7 @@ pagesInit =
             Page.Counter.init
 
         ( dateModel, dateCmd ) =
-            Page.InternationalDate.init 3000 1
+            Page.InternationalDate.init
 
         cmd =
             Cmd.batch
@@ -323,7 +326,7 @@ pageView model =
         Just Route.InternationalDate ->
             let
                 ( title, content ) =
-                    Page.InternationalDate.view model.pagesState.intlDate
+                    Page.InternationalDate.view model.pagesState.intlDate model.timestamp
             in
             ( title, Html.map GotDateMsg content )
 
