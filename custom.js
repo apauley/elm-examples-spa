@@ -23,12 +23,12 @@ function detectColorScheme() {
 // Create a function that that formats text as you need. Here we have
 // a function to localize dates:
 //
-//   localizeDate('sr-RS', 12, 5) == "петак, 1. јун 2012."
-//   localizeDate('en-GB', 12, 5) == "Friday, 1 June 2012"
-//   localizeDate('en-US', 12, 5) == "Friday, June 1, 2012"
+//   localizeDate('sr-RS', 12, 5, 1) == "петак, 1. јун 2012."
+//   localizeDate('en-GB', 12, 5, 1) == "Friday, 1 June 2012"
+//   localizeDate('en-US', 12, 5, 1) == "Friday, June 1, 2012"
 //
 // https://github.com/elm-community/js-integration-examples/blob/master/internationalization/index.html
-function localizeDate(lang, year, month) {
+function localizeDate(lang, year, month, day) {
   const dateTimeFormat = new Intl.DateTimeFormat(lang, {
     weekday: "long",
     year: "numeric",
@@ -36,17 +36,17 @@ function localizeDate(lang, year, month) {
     day: "numeric",
   });
 
-  return dateTimeFormat.format(new Date(year, month));
+  return dateTimeFormat.format(new Date(year, month, day));
 }
 
 // Define a Custom Element that uses this function. Here we make it
 // possible to define nodes like this:
 //
-//     <intl-date lang="sr-RS" year="2012" month="5">
-//     <intl-date lang="en-GB" year="2012" month="5">
-//     <intl-date lang="en-US" year="2012" month="5">
+//     <intl-date lang="sr-RS" year="2012" month="5" day="2">
+//     <intl-date lang="en-GB" year="2012" month="5" day="2">
+//     <intl-date lang="en-US" year="2012" month="5" day="2">
 //
-// Check out src/Main.elm to see how you use this on the Elm side.
+// Check out src/Page/InternationalDate.elm to see how you use this on the Elm side.
 //
 customElements.define(
   "intl-date",
@@ -62,7 +62,7 @@ customElements.define(
       this.setTextContent();
     }
     static get observedAttributes() {
-      return ["lang", "year", "month"];
+      return ["lang", "year", "month", "day"];
     }
 
     // Our function to set the textContent based on attributes.
@@ -70,7 +70,8 @@ customElements.define(
       const lang = this.getAttribute("lang");
       const year = this.getAttribute("year");
       const month = this.getAttribute("month");
-      this.textContent = localizeDate(lang, year, month);
+      const day = this.getAttribute("day");
+      this.textContent = localizeDate(lang, year, month, day);
     }
   }
 );

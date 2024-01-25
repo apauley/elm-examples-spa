@@ -112,6 +112,7 @@ viewDate lang year month day =
         [ Attributes.attribute "lang" lang
         , Attributes.attribute "year" (String.fromInt year)
         , Attributes.attribute "month" (String.fromInt month)
+        , Attributes.attribute "day" (String.fromInt day)
         ]
         []
 
