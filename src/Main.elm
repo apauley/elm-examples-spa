@@ -14,6 +14,9 @@ import Page.NotFound
 import Page.Quotes
 import Platform.Cmd as Cmd
 import Route exposing (Route)
+import Task
+import Time
+import TimeStamp exposing (TimeStamp)
 import UI
 import Url
 
@@ -38,6 +41,7 @@ type alias Model =
     { navKey : Nav.Key
     , url : Url.Url
     , route : Maybe Route
+    , timestamp : TimeStamp
     , preferences : Preferences
     , pagesState : PagesState
     }
@@ -54,16 +58,17 @@ type alias PagesState =
 init : String -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init theme url navKey =
     let
-        ( pagesState, cmd ) =
+        ( pagesState, pagesCmd ) =
             pagesInit
     in
     ( { navKey = navKey
       , url = url
       , route = Route.fromUrl url
+      , timestamp = TimeStamp Time.utc (Time.millisToPosix 0)
       , preferences = { darkMode = theme == "dark" }
       , pagesState = pagesState
       }
-    , cmd
+    , Cmd.batch [ Task.perform AdjustTimeZone Time.here, pagesCmd ]
     )
 
 
@@ -77,10 +82,14 @@ pagesInit =
             Page.Counter.init
 
         ( dateModel, dateCmd ) =
-            Page.InternationalDate.init
+            Page.InternationalDate.init 3000 1
 
         cmd =
-            Cmd.batch [ Cmd.map GotCounterMsg counterCmd, Cmd.map GotQuotesMsg quotesCmd ]
+            Cmd.batch
+                [ Cmd.map GotCounterMsg counterCmd
+                , Cmd.map GotQuotesMsg quotesCmd
+                , Cmd.map GotDateMsg dateCmd
+                ]
     in
     ( { counter = counterModel
       , imagePreview = Page.ImagePreview.init
@@ -92,7 +101,9 @@ pagesInit =
 
 
 type Msg
-    = LinkClicked Browser.UrlRequest
+    = Tick Time.Posix
+    | AdjustTimeZone Time.Zone
+    | LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | ToggleDarkMode
     | GotCounterMsg Page.Counter.Msg
@@ -104,6 +115,16 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        Tick newTime ->
+            ( { model | timestamp = updateTime model.timestamp newTime }
+            , Cmd.none
+            )
+
+        AdjustTimeZone newZone ->
+            ( { model | timestamp = updateZone model.timestamp newZone }
+            , Cmd.none
+            )
+
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
@@ -138,6 +159,16 @@ update msg model =
 
         GotDateMsg subMsg ->
             updateInternationalDate model subMsg
+
+
+updateTime : TimeStamp -> Time.Posix -> TimeStamp
+updateTime previous newTime =
+    { previous | time = newTime }
+
+
+updateZone : TimeStamp -> Time.Zone -> TimeStamp
+updateZone previous newZone =
+    { previous | zone = newZone }
 
 
 updateInternationalDate : Model -> Page.InternationalDate.Msg -> ( Model, Cmd Msg )
@@ -224,9 +255,13 @@ updateImagePreview model subMsg =
     ( newModel, Cmd.map GotImagePreviewMsg pageCmd )
 
 
+
+-- SUBSCRIPTIONS
+
+
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Time.every 1000 Tick
 
 
 view : Model -> Document Msg
@@ -241,9 +276,7 @@ view model =
             [ Html.header [] [ topBarNavLinks model ]
             , Html.aside [] [ sideBarNavLinks model.url ]
             , Html.section [] [ pageContent ]
-            , Html.footer []
-                [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub"
-                ]
+            , Html.footer [] [ footerBar model ]
             ]
         ]
     }
@@ -299,9 +332,7 @@ topBarNavLinks : Model -> Html Msg
 topBarNavLinks model =
     UI.navBar
         [ [ UI.appLink model.url Route.Home "Home" ]
-        , [ themeToggleButton model.preferences.darkMode
-          , UI.appLink model.url Route.Home "" -- This invisible link is a way for someone who doesn't know CSS to add a gap after the toggle button
-          ]
+        , [ themeToggleButton model.preferences.darkMode ]
         ]
 
 
@@ -314,3 +345,16 @@ sideBarNavLinks url =
           , UI.appLink url Route.InternationalDate "International Date"
           ]
         ]
+
+
+footerBar : Model -> Html Msg
+footerBar model =
+    UI.navBar
+        [ [ UI.externalLink "https://github.com/apauley/elm-examples-spa" "GitHub" ]
+        , [ viewTime model.timestamp ]
+        ]
+
+
+viewTime : TimeStamp -> Html Msg
+viewTime timestamp =
+    p [] [ TimeStamp.toString timestamp |> Html.text ]

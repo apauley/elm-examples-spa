@@ -2,6 +2,8 @@ main {
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: 2rem;
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
 }
 
 header {

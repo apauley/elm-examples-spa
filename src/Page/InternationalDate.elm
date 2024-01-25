@@ -13,12 +13,14 @@ import UI
 
 type alias Model =
     { language : String
+    , year : Int
+    , month : Int
     }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( { language = "sr-RS" }
+init : Int -> Int -> ( Model, Cmd Msg )
+init year month =
+    ( { language = "sr-RS", year = year, month = month }
     , Cmd.none
     )
 
@@ -74,7 +76,7 @@ explanation =
 
 widget model =
     Html.article []
-        [ Html.p [] [ viewDate model.language 2012 5 ]
+        [ Html.p [] [ viewDate model.language model.year model.month ]
         , Html.select
             [ Events.on "change" (D.map LanguageChanged valueDecoder)
             ]
